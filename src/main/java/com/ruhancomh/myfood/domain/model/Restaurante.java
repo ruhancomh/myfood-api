@@ -16,7 +16,7 @@ import lombok.EqualsAndHashCode;
 @Data
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
 @Entity
-@Table(name = "restaurantes")
+@Table(name = "restaurante")
 public class Restaurante {
 	
 	@EqualsAndHashCode.Include
