@@ -19,7 +19,7 @@ public class CozinhaRepositoryJPA implements CozinhaRepository {
 	
 	@Override
 	public List<Cozinha> listar() {
-		return this.manager.createQuery("from cozinhas", Cozinha.class).getResultList();
+		return this.manager.createQuery("from Cozinha", Cozinha.class).getResultList();
 	}
 
 	@Override

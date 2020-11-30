@@ -19,7 +19,7 @@ public class EstadoRepositoryJPA implements EstadoRepository{
 	
 	@Override
 	public List<Estado> listar() {
-		return this.manager.createQuery("from estado", Estado.class).getResultList();
+		return this.manager.createQuery("from Estado", Estado.class).getResultList();
 	}
 
 	@Override

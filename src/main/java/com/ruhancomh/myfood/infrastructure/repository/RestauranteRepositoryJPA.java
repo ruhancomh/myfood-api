@@ -19,7 +19,7 @@ public class RestauranteRepositoryJPA implements RestauranteRepository {
 	
 	@Override
 	public List<Restaurante> listar() {
-		return this.manager.createQuery("from restaurantes", Restaurante.class).getResultList();
+		return this.manager.createQuery("from Restaurantes", Restaurante.class).getResultList();
 	}
 
 	@Override

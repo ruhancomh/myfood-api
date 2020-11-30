@@ -18,7 +18,7 @@ public class FormaPagamentoRepositoryJPA implements FormaPagamentoRepository {
 	
 	@Override
 	public List<FormaPagamento> listar() {
-		return this.manager.createQuery("from forma_pagamento", FormaPagamento.class).getResultList();
+		return this.manager.createQuery("from FormaPagamento", FormaPagamento.class).getResultList();
 	}
 
 	@Override

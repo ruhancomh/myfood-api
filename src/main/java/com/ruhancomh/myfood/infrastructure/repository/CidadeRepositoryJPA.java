@@ -19,7 +19,7 @@ public class CidadeRepositoryJPA implements CidadeRepository {
 	
 	@Override
 	public List<Cidade> listar() {
-		return this.manager.createQuery("from cidade", Cidade.class).getResultList();
+		return this.manager.createQuery("from Cidade", Cidade.class).getResultList();
 	}
 
 	@Override
