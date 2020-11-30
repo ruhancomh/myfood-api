@@ -4,6 +4,7 @@ import java.util.List;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import javax.transaction.Transactional;
 
 import org.springframework.stereotype.Component;
 
@@ -14,7 +15,7 @@ import com.ruhancomh.myfood.domain.repository.RestauranteRepository;
 public class RestauranteRepositoryJPA implements RestauranteRepository {
 
 	@PersistenceContext
-	EntityManager manager;
+	private EntityManager manager;
 	
 	@Override
 	public List<Restaurante> listar() {
@@ -27,11 +28,13 @@ public class RestauranteRepositoryJPA implements RestauranteRepository {
 	}
 
 	@Override
+	@Transactional
 	public Restaurante salvar(Restaurante restaurante) {
 		return this.manager.merge(restaurante);
 	}
 
 	@Override
+	@Transactional
 	public void remover(Restaurante restaurante) {
 		restaurante = this.buscar(restaurante.getId());
 		this.manager.remove(restaurante);
