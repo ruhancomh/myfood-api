@@ -2,7 +2,6 @@ package com.ruhancomh.myfood.api.controller;
 
 import java.util.List;
 
-import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -16,57 +15,50 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.ruhancomh.myfood.domain.exception.CozinhaNaoEncontradaException;
+import com.ruhancomh.myfood.domain.exception.RecursoNaoEncontradoException;
 import com.ruhancomh.myfood.domain.exception.EntidadeEmUsoException;
 import com.ruhancomh.myfood.domain.model.Cozinha;
-import com.ruhancomh.myfood.domain.repository.CozinhaRepository;
 import com.ruhancomh.myfood.domain.service.CadastroCozinhaService;
 
 @RestController
 @RequestMapping("/cozinhas")
 public class CozinhaController {
-
-	@Autowired
-	private CozinhaRepository cozinhaRepository;
 	
 	@Autowired
 	private CadastroCozinhaService cadastroCozinhaService;
 	
 	@GetMapping
 	public List<Cozinha> listar () {
-		return this.cozinhaRepository.listar();
+		return this.cadastroCozinhaService.listar();
 	}
 	
 	@GetMapping("/{id}")
 	public ResponseEntity<Cozinha> buscar (@PathVariable Long id) {
-		Cozinha cozinha = this.cozinhaRepository.buscar(id);
-		
-		if (cozinha != null) {
+		try {
+			Cozinha cozinha = this.cadastroCozinhaService.buscar(id);
 			return ResponseEntity.ok(cozinha);
+			
+		}catch (RecursoNaoEncontradoException e) {
+			return ResponseEntity.notFound().build();
+			
 		}
-		
-		return ResponseEntity.notFound().build();
 	}
 	
 	@ResponseStatus(HttpStatus.CREATED)
 	@PostMapping
 	public Cozinha criar (@RequestBody Cozinha cozinha) {
-		return this.cadastroCozinhaService.salvar(cozinha);
+		return this.cadastroCozinhaService.criar(cozinha);
 	}
 	
 	@PutMapping("/{id}")
 	public ResponseEntity<Cozinha> atualizar (@PathVariable Long id, @RequestBody Cozinha cozinha) {
-		Cozinha cozinhaAtual = this.cozinhaRepository.buscar(id);
-		
-		if (cozinhaAtual == null) {
+		try {
+			return ResponseEntity.ok(this.cadastroCozinhaService.atualizar(id, cozinha));
+			
+		} catch (RecursoNaoEncontradoException e) {
 			return ResponseEntity.notFound().build();
+			
 		}
-		
-		BeanUtils.copyProperties(cozinha, cozinhaAtual, "id");
-		
-		cozinhaAtual = this.cozinhaRepository.salvar(cozinhaAtual);
-		
-		return ResponseEntity.ok(cozinhaAtual);
 	}
 	
 	@DeleteMapping("/{id}")
@@ -75,7 +67,7 @@ public class CozinhaController {
 			this.cadastroCozinhaService.remover(id);
 			return ResponseEntity.noContent().build();
 			
-		} catch (CozinhaNaoEncontradaException e) {
+		} catch (RecursoNaoEncontradoException e) {
 			return ResponseEntity.notFound().build();
 			
 		}catch (EntidadeEmUsoException e) {
