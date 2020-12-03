@@ -6,6 +6,7 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.ruhancomh.myfood.domain.exception.EntidadeRelacionadaNaoEncontradaException;
 import com.ruhancomh.myfood.domain.exception.RecursoNaoEncontradoException;
 import com.ruhancomh.myfood.domain.model.Cozinha;
 import com.ruhancomh.myfood.domain.model.Restaurante;
@@ -25,11 +26,11 @@ public class CadastroRestauranteService {
 		return this.restauranteRepository.listar();
 	}
 	
-	public Restaurante buscar (Long id) {
-		Restaurante restaurante = this.restauranteRepository.buscar(id);
+	public Restaurante buscar (Long restauranteId) {
+		Restaurante restaurante = this.restauranteRepository.buscar(restauranteId);
 		
 		if (restaurante == null) {
-			throw new RecursoNaoEncontradoException("restaurante", id);
+			throw new RecursoNaoEncontradoException("restaurante", restauranteId);
 		}
 		
 		return restaurante;
@@ -59,12 +60,22 @@ public class CadastroRestauranteService {
 		Cozinha cozinha = this.cozinhaRepository.buscar(cozinhaId);
 		
 		if (cozinha == null) {
-			throw new RecursoNaoEncontradoException("cozinha", cozinhaId);
+			throw new EntidadeRelacionadaNaoEncontradaException("cozinha", cozinhaId);
 		}
 		
 		BeanUtils.copyProperties(restaurante, restauranteAtual, "id");
 		restauranteAtual.setCozinha(cozinha);
 		
 		return this.restauranteRepository.salvar(restauranteAtual);
+	}
+
+	public void remover(Long restauranteId) {
+		Restaurante restaurante = this.restauranteRepository.buscar(restauranteId);
+		
+		if (restaurante == null) {
+			throw new RecursoNaoEncontradoException("restaurante", restauranteId);
+		}
+		
+		this.restauranteRepository.remover(restaurante);
 	}
 }
