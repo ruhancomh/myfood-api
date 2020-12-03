@@ -2,6 +2,7 @@ package com.ruhancomh.myfood.domain.service;
 
 import java.util.List;
 
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -45,5 +46,25 @@ public class CadastroRestauranteService {
 		restaurante.setCozinha(cozinha);
 		
 		return this.restauranteRepository.salvar(restaurante);	
+	}
+
+	public Restaurante atualizar(Long restauranteId, Restaurante restaurante) {
+		Restaurante restauranteAtual = this.restauranteRepository.buscar(restauranteId);
+		
+		if (restauranteAtual == null) {
+			throw new RecursoNaoEncontradoException("restaurante", restauranteId);
+		}
+		
+		Long cozinhaId = restaurante.getCozinha().getId();
+		Cozinha cozinha = this.cozinhaRepository.buscar(cozinhaId);
+		
+		if (cozinha == null) {
+			throw new RecursoNaoEncontradoException("cozinha", cozinhaId);
+		}
+		
+		BeanUtils.copyProperties(restaurante, restauranteAtual, "id");
+		restauranteAtual.setCozinha(cozinha);
+		
+		return this.restauranteRepository.salvar(restauranteAtual);
 	}
 }

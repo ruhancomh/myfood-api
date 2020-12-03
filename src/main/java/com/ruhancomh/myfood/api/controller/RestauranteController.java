@@ -8,6 +8,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -47,6 +48,16 @@ public class RestauranteController {
 		} catch (RecursoNaoEncontradoException e) {
 			return ResponseEntity.badRequest().body(e.getMessage());
 			
+		}
+	}
+	
+	@PutMapping("/{id}")
+	public ResponseEntity<?> atualizar (@PathVariable Long id, @RequestBody Restaurante restaurante) {
+		try {
+			Restaurante restauranteAtualizado = this.cadastroRestauranteService.atualizar(id, restaurante);
+			return ResponseEntity.ok(restauranteAtualizado);
+		} catch (RecursoNaoEncontradoException e) {
+			return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
 		}
 	}
 	
