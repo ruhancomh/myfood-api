@@ -1,6 +1,7 @@
 package com.ruhancomh.myfood.domain.service;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,38 +21,40 @@ public class CadastroCozinhaService {
 	private CozinhaRepository cozinhaRepository;
 	
 	public List<Cozinha> listar () {
-		return this.cozinhaRepository.listar();
+		return this.cozinhaRepository.findAll();
 	}
 	
 	public Cozinha buscar (Long cozinhaId) {
-		Cozinha cozinha = this.buscar(cozinhaId);
+		Optional<Cozinha> cozinha = this.cozinhaRepository.findById(cozinhaId);
 		
-		if (cozinha != null) {
+		if (cozinha.isEmpty()) {
 			throw new RecursoNaoEncontradoException("cozinha", cozinhaId);
 		}
 		
-		return cozinha;
+		return cozinha.get();
 	}
 	
 	public Cozinha criar(Cozinha cozinha) {
-		return this.cozinhaRepository.salvar(cozinha);
+		return this.cozinhaRepository.save(cozinha);
 	}
 	
 	public Cozinha atualizar (Long cozinhaId, Cozinha cozinha) {
-		Cozinha cozinhaAtual = this.cozinhaRepository.buscar(cozinhaId);
+		Optional<Cozinha> cozinhaOptional = this.cozinhaRepository.findById(cozinhaId);
 		
-		if (cozinhaAtual == null) {
+		if (cozinhaOptional.isEmpty()) {
 			throw new RecursoNaoEncontradoException("cozinha", cozinhaId);
 		}
 		
+		Cozinha cozinhaAtual = cozinhaOptional.get();
+		
 		BeanUtils.copyProperties(cozinha, cozinhaAtual, "id");
 		
-		return this.cozinhaRepository.salvar(cozinhaAtual);
+		return this.cozinhaRepository.save(cozinhaAtual);
 	}
 	
 	public void remover (Long cozinhaId) {
 		try {
-			this.cozinhaRepository.remover(cozinhaId);
+			this.cozinhaRepository.deleteById(cozinhaId);
 			
 		} catch (EmptyResultDataAccessException e) {
 			throw new RecursoNaoEncontradoException("cozinha", cozinhaId);

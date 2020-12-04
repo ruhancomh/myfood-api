@@ -38,11 +38,8 @@ public class CadastroRestauranteService {
 	
 	public Restaurante criar (Restaurante restaurante)  {	
 		Long cozinhaId = restaurante.getCozinha().getId();
-		Cozinha cozinha = this.cozinhaRepository.buscar(cozinhaId);
-		
-		if (cozinha == null) {
-			throw new RecursoNaoEncontradoException("cozinha", cozinhaId);
-		}
+		Cozinha cozinha = this.cozinhaRepository.findById(cozinhaId)
+				.orElseThrow(() -> new RecursoNaoEncontradoException("cozinha", cozinhaId));
 		
 		restaurante.setCozinha(cozinha);
 		
@@ -57,11 +54,8 @@ public class CadastroRestauranteService {
 		}
 		
 		Long cozinhaId = restaurante.getCozinha().getId();
-		Cozinha cozinha = this.cozinhaRepository.buscar(cozinhaId);
-		
-		if (cozinha == null) {
-			throw new EntidadeRelacionadaNaoEncontradaException("cozinha", cozinhaId);
-		}
+		Cozinha cozinha = this.cozinhaRepository.findById(cozinhaId)
+				.orElseThrow(() -> new EntidadeRelacionadaNaoEncontradaException("cozinha", cozinhaId));
 		
 		BeanUtils.copyProperties(restaurante, restauranteAtual, "id");
 		restauranteAtual.setCozinha(cozinha);
