@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
 
 import com.ruhancomh.myfood.domain.exception.EntidadeRelacionadaNaoEncontradaException;
@@ -23,15 +24,12 @@ public class CadastroRestauranteService {
 	private CozinhaRepository cozinhaRepository;
 	
 	public List<Restaurante> listar () {
-		return this.restauranteRepository.listar();
+		return this.restauranteRepository.findAll();
 	}
 	
 	public Restaurante buscar (Long restauranteId) {
-		Restaurante restaurante = this.restauranteRepository.buscar(restauranteId);
-		
-		if (restaurante == null) {
-			throw new RecursoNaoEncontradoException("restaurante", restauranteId);
-		}
+		Restaurante restaurante = this.restauranteRepository.findById(restauranteId)
+				.orElseThrow(() -> new RecursoNaoEncontradoException("restaurante", restauranteId));
 		
 		return restaurante;
 	}
@@ -43,15 +41,12 @@ public class CadastroRestauranteService {
 		
 		restaurante.setCozinha(cozinha);
 		
-		return this.restauranteRepository.salvar(restaurante);	
+		return this.restauranteRepository.save(restaurante);	
 	}
 
 	public Restaurante atualizar(Long restauranteId, Restaurante restaurante) {
-		Restaurante restauranteAtual = this.restauranteRepository.buscar(restauranteId);
-		
-		if (restauranteAtual == null) {
-			throw new RecursoNaoEncontradoException("restaurante", restauranteId);
-		}
+		Restaurante restauranteAtual = this.restauranteRepository.findById(restauranteId)
+				.orElseThrow(() -> new RecursoNaoEncontradoException("restaurante", restauranteId));
 		
 		Long cozinhaId = restaurante.getCozinha().getId();
 		Cozinha cozinha = this.cozinhaRepository.findById(cozinhaId)
@@ -60,16 +55,14 @@ public class CadastroRestauranteService {
 		BeanUtils.copyProperties(restaurante, restauranteAtual, "id");
 		restauranteAtual.setCozinha(cozinha);
 		
-		return this.restauranteRepository.salvar(restauranteAtual);
+		return this.restauranteRepository.save(restauranteAtual);
 	}
 
 	public void remover(Long restauranteId) {
-		Restaurante restaurante = this.restauranteRepository.buscar(restauranteId);
-		
-		if (restaurante == null) {
+		try {
+			this.restauranteRepository.deleteById(restauranteId);
+		} catch (EmptyResultDataAccessException e) {
 			throw new RecursoNaoEncontradoException("restaurante", restauranteId);
 		}
-		
-		this.restauranteRepository.remover(restaurante);
 	}
 }

@@ -1,14 +1,10 @@
 package com.ruhancomh.myfood.domain.repository;
 
-import java.util.List;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
 
 import com.ruhancomh.myfood.domain.model.Permissao;
 
-public interface PermissaoRepository {
-
-	public List<Permissao> listar ();
-	public Permissao buscar (Long id);
-	public Permissao salvar (Permissao permissao);
-	public void remover (Permissao permissao);
-	
+@Repository
+public interface PermissaoRepository extends JpaRepository<Permissao, Long>{
 }

@@ -5,6 +5,7 @@ import java.util.List;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
 
 import com.ruhancomh.myfood.domain.exception.EntidadeEmUsoException;
@@ -19,48 +20,35 @@ public class CadastroEstadoService {
 	private EstadoRepository estadoRepository;
 	
 	public List<Estado> listar () {
-		return this.estadoRepository.listar();
+		return this.estadoRepository.findAll();
 	}
 
 	public Estado buscar(Long estadoId) {
-		Estado estado = this.estadoRepository.buscar(estadoId);
-		
-		if (estado == null) {
-			throw new RecursoNaoEncontradoException("estado", estadoId);
-		}
+		Estado estado = this.estadoRepository.findById(estadoId)
+				.orElseThrow(() -> new RecursoNaoEncontradoException("estado", estadoId));
 		
 		return estado;
 	}
 
 	public Estado cadastrar(Estado estado) {
-		estado = this.estadoRepository.salvar(estado);
-		return estado;
+		return this.estadoRepository.save(estado);
 	}
 
 	public Estado atualizar(Long estadoId, Estado estado) {
-		Estado estadoAtual = this.estadoRepository.buscar(estadoId);
-		
-		if (estadoAtual == null) {
-			throw new RecursoNaoEncontradoException("estado", estadoId);
-		}
+		Estado estadoAtual = this.estadoRepository.findById(estadoId)
+				.orElseThrow(() -> new RecursoNaoEncontradoException("estado", estadoId));
 		
 		BeanUtils.copyProperties(estado, estadoAtual, "id");
 		
-		estadoAtual = this.estadoRepository.salvar(estadoAtual);
-		
-		return estadoAtual;
+		return this.estadoRepository.save(estadoAtual);
 	}
 
 	public void remover(Long estadoId) {
-		Estado estado = this.estadoRepository.buscar(estadoId);
-		
-		if (estado == null) {
-			throw new RecursoNaoEncontradoException("estado", estadoId);
-		}
-		
 		try {
-			this.estadoRepository.remover(estado);
-		} catch (DataIntegrityViolationException e) {
+			this.estadoRepository.deleteById(estadoId);
+		} catch (EmptyResultDataAccessException e) {
+			throw new RecursoNaoEncontradoException("estado", estadoId);
+		}  catch (DataIntegrityViolationException e) {
 			throw new EntidadeEmUsoException();
 		}
 	}
