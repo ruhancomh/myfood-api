@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.ruhancomh.myfood.domain.model.Restaurante;
 import com.ruhancomh.myfood.domain.repository.RestauranteRepository;
+import com.ruhancomh.myfood.infrastructure.repository.spec.RestauranteRepositorySpecFactory;
 
 @RestController
 @RequestMapping("/teste")
@@ -18,9 +19,20 @@ public class TesteController {
 	@Autowired
 	private RestauranteRepository restauranteRepository;
 	
+	@Autowired
+	private RestauranteRepositorySpecFactory restauranteSpecFactory;
+	
 	@GetMapping("/restaurantes-por-nome-taxa")
-	public List<Restaurante> buscaPorNomeETaxaFrete (String nome, BigDecimal taxaFreteInicial, BigDecimal taxaFreteFinal) {
+	public List<Restaurante> buscaPorNomeETaxaFrete (String nome, BigDecimal taxaFreteInicial,
+			BigDecimal taxaFreteFinal) {
 		return this.restauranteRepository.findByNameAndTaxaFrete(nome, taxaFreteInicial, taxaFreteFinal);
 	}
 	
+	@GetMapping("/restaurantes-com-frete-gratis")
+	public List<Restaurante> buscaComFreteGratis (String nome) {
+		return this.restauranteRepository.findAll(
+					this.restauranteSpecFactory.comFreteGratis()
+						.and(this.restauranteSpecFactory.comNomeSemelhante(nome))
+				);
+	}
 }
