@@ -11,17 +11,27 @@ import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Repository;
 import org.springframework.util.StringUtils;
 
 import com.ruhancomh.myfood.domain.model.Restaurante;
-import com.ruhancomh.myfood.domain.repository.CustomRestauranteRepository;
+import com.ruhancomh.myfood.domain.repository.RestauranteRepository;
+import com.ruhancomh.myfood.domain.repository.RestauranteRepositoryCustom;
+import com.ruhancomh.myfood.infrastructure.repository.spec.RestauranteRepositorySpecFactory;
 
 @Repository
-public class RestauranteRepositoryImpl implements CustomRestauranteRepository {
+public class RestauranteRepositoryImpl implements RestauranteRepositoryCustom {
 
 	@PersistenceContext
 	private EntityManager manager;
+	
+	@Autowired
+	private RestauranteRepositorySpecFactory restauranteSpecFactory;
+	
+	@Autowired @Lazy
+	private RestauranteRepository restauranteRepository;
 	
 	@Override
 	public List<Restaurante> findByNameAndTaxaFrete(String nome, BigDecimal taxaFreteInicial,
@@ -59,6 +69,15 @@ public class RestauranteRepositoryImpl implements CustomRestauranteRepository {
 		criteriaQuery.where(predicates.toArray(new Predicate[0]));
 		
 		return this.manager.createQuery(criteriaQuery).getResultList();
+	}
+
+	@Override
+	public List<Restaurante> findComFreteGratis(String nome) {
+		
+		return this.restauranteRepository.findAll(
+				this.restauranteSpecFactory.comFreteGratis()
+				.and(this.restauranteSpecFactory.comNomeSemelhante(nome))
+		);
 	}
 
 }

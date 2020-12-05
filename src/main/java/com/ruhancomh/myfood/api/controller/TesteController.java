@@ -19,9 +19,6 @@ public class TesteController {
 	@Autowired
 	private RestauranteRepository restauranteRepository;
 	
-	@Autowired
-	private RestauranteRepositorySpecFactory restauranteSpecFactory;
-	
 	@GetMapping("/restaurantes-por-nome-taxa")
 	public List<Restaurante> buscaPorNomeETaxaFrete (String nome, BigDecimal taxaFreteInicial,
 			BigDecimal taxaFreteFinal) {
@@ -30,9 +27,6 @@ public class TesteController {
 	
 	@GetMapping("/restaurantes-com-frete-gratis")
 	public List<Restaurante> buscaComFreteGratis (String nome) {
-		return this.restauranteRepository.findAll(
-					this.restauranteSpecFactory.comFreteGratis()
-						.and(this.restauranteSpecFactory.comNomeSemelhante(nome))
-				);
+		return this.restauranteRepository.findComFreteGratis(nome);
 	}
 }

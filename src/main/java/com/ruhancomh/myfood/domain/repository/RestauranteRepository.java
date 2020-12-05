@@ -8,6 +8,6 @@ import com.ruhancomh.myfood.domain.model.Restaurante;
 
 @Repository
 public interface RestauranteRepository
-	extends JpaRepository<Restaurante, Long>, CustomRestauranteRepository,
+	extends JpaRepository<Restaurante, Long>, RestauranteRepositoryCustom,
 	JpaSpecificationExecutor<Restaurante> {
 }
