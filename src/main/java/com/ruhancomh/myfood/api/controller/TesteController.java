@@ -2,6 +2,7 @@ package com.ruhancomh.myfood.api.controller;
 
 import java.math.BigDecimal;
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -10,7 +11,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.ruhancomh.myfood.domain.model.Restaurante;
 import com.ruhancomh.myfood.domain.repository.RestauranteRepository;
-import com.ruhancomh.myfood.infrastructure.repository.spec.RestauranteRepositorySpecFactory;
 
 @RestController
 @RequestMapping("/teste")
@@ -28,5 +28,10 @@ public class TesteController {
 	@GetMapping("/restaurantes-com-frete-gratis")
 	public List<Restaurante> buscaComFreteGratis (String nome) {
 		return this.restauranteRepository.findComFreteGratis(nome);
+	}
+	
+	@GetMapping("/restaurantes/primeiro")
+	public Optional<Restaurante> buscaPrimeiroRestaurante () {
+		return this.restauranteRepository.buscarPrimeiro();
 	}
 }
