@@ -31,7 +31,7 @@ public class RestauranteController {
 		return this.cadastroRestauranteService.listar();
 	}
 	
-	@GetMapping("/{retauranteId}")
+	@GetMapping("/{restauranteId}")
 	public ResponseEntity<Restaurante> buscar (@PathVariable Long restauranteId) {
 		try {
 			return ResponseEntity.ok(this.cadastroRestauranteService.buscar(restauranteId));
