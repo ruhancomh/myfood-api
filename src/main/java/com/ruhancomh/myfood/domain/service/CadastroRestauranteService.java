@@ -52,7 +52,7 @@ public class CadastroRestauranteService {
 		Cozinha cozinha = this.cozinhaRepository.findById(cozinhaId)
 				.orElseThrow(() -> new EntidadeRelacionadaNaoEncontradaException("cozinha", cozinhaId));
 		
-		BeanUtils.copyProperties(restaurante, restauranteAtual, "id", "formasPagamento", "endereco");
+		BeanUtils.copyProperties(restaurante, restauranteAtual, "id", "formasPagamento", "endereco", "dataCadastro");
 		restauranteAtual.setCozinha(cozinha);
 		
 		return this.restauranteRepository.save(restauranteAtual);
