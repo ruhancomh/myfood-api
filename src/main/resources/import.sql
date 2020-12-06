@@ -19,6 +19,8 @@ insert into forma_pagamento (id, descricao) values (1, 'Cartão de crédito');
 insert into forma_pagamento (id, descricao) values (2, 'Cartão de débito');
 insert into forma_pagamento (id, descricao) values (3, 'Dinheiro');
 
+insert into produto (id, nome, descricao, preco, ativo, restaurante_id) values (1, 'Pao de sal', 'Um saboroso pao de sal', 5.80, true, 1), (2, 'Pizza Doce', 'A melhor pizza do Brasil', 29.80, false, 1)
+
 insert into permissao (id, nome, descricao) values (1, 'CONSULTAR_COZINHAS', 'Permite consultar cozinhas');
 insert into permissao (id, nome, descricao) values (2, 'EDITAR_COZINHAS', 'Permite editar cozinhas');
 
