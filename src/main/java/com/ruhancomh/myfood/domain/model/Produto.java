@@ -27,16 +27,15 @@ public class Produto {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 	
-	@Column
+	@Column(nullable = false)
 	private String nome;
 	
-	@Column
+	@Column(nullable = false)
 	private String descricao;
 	
-	@Column
+	@Column(nullable = false)
 	private BigDecimal preco;
 	
-	@Column
 	private boolean ativo;
 	
 	@JsonIgnore
