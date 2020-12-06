@@ -9,6 +9,7 @@ import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
 
 import com.ruhancomh.myfood.domain.exception.EntidadeEmUsoException;
+import com.ruhancomh.myfood.domain.exception.EntidadeRelacionadaNaoEncontradaException;
 import com.ruhancomh.myfood.domain.exception.RecursoNaoEncontradoException;
 import com.ruhancomh.myfood.domain.model.Cozinha;
 import com.ruhancomh.myfood.domain.model.Restaurante;
@@ -38,7 +39,7 @@ public class CadastroRestauranteService {
 	
 	public Restaurante criar (Restaurante restaurante)  {
 		Long cozinhaId = restaurante.getCozinha().getId();
-		Cozinha cozinha = this.cadastroCozinhaService.buscarOuFalhar(cozinhaId);
+		Cozinha cozinha = this.getCozinhaRelacionada(cozinhaId);
 		
 		restaurante.setCozinha(cozinha);
 		
@@ -49,7 +50,7 @@ public class CadastroRestauranteService {
 		Restaurante restauranteAtual = this.buscarOuFalhar(restauranteId);
 		
 		Long cozinhaId = restaurante.getCozinha().getId();
-		Cozinha cozinha = this.cadastroCozinhaService.buscarOuFalhar(cozinhaId);
+		Cozinha cozinha = this.getCozinhaRelacionada(cozinhaId);
 		
 		BeanUtils.copyProperties(restaurante, restauranteAtual, "id", "formasPagamento", "endereco",
 				"dataCadastro", "produtos");
@@ -66,6 +67,15 @@ public class CadastroRestauranteService {
 			throw new RecursoNaoEncontradoException(NOME_RECURSO, restauranteId);
 		} catch (DataIntegrityViolationException e) {
 			throw new EntidadeEmUsoException();
+		}
+	}
+	
+	
+	private Cozinha getCozinhaRelacionada(Long cozinhaId) {
+		try {
+			return this.cadastroCozinhaService.buscarOuFalhar(cozinhaId);
+		} catch (EntidadeRelacionadaNaoEncontradaException e) {
+			throw new EntidadeRelacionadaNaoEncontradaException("cozinha", cozinhaId);
 		}
 	}
 }

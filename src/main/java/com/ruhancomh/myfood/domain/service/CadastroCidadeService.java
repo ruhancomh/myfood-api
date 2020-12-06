@@ -9,6 +9,7 @@ import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
 
 import com.ruhancomh.myfood.domain.exception.EntidadeEmUsoException;
+import com.ruhancomh.myfood.domain.exception.EntidadeRelacionadaNaoEncontradaException;
 import com.ruhancomh.myfood.domain.exception.RecursoNaoEncontradoException;
 import com.ruhancomh.myfood.domain.model.Cidade;
 import com.ruhancomh.myfood.domain.model.Estado;
@@ -38,7 +39,7 @@ public class CadastroCidadeService {
 	
 	public Cidade cadastrar (Cidade cidade) {
 		Long estadoId = cidade.getEstado().getId();
-		Estado estado = this.cadastroEstadoService.buscarOuFalhar(estadoId);
+		Estado estado = this.getEstadoRelacionado(estadoId);
 		
 		cidade.setEstado(estado);
 		
@@ -49,7 +50,7 @@ public class CadastroCidadeService {
 		Cidade cidadeAtual = this.buscarOuFalhar(cidadeId);
 		
 		Long estadoId = cidade.getEstado().getId();
-		Estado estado = this.cadastroEstadoService.buscarOuFalhar(estadoId);
+		Estado estado = this.getEstadoRelacionado(estadoId);
 		
 		BeanUtils.copyProperties(cidade, cidadeAtual, "id");
 		cidadeAtual.setEstado(estado);
@@ -66,6 +67,14 @@ public class CadastroCidadeService {
 		} catch (DataIntegrityViolationException e) {
 			throw new EntidadeEmUsoException();
 			
+		}
+	}
+	
+	private Estado getEstadoRelacionado(Long estadoId) {
+		try {
+			return this.cadastroEstadoService.buscarOuFalhar(estadoId);
+		} catch (RecursoNaoEncontradoException e) {
+			throw new EntidadeRelacionadaNaoEncontradaException("estado", estadoId);
 		}
 	}
 }
