@@ -24,14 +24,9 @@ public class CadastroCozinhaService {
 		return this.cozinhaRepository.findAll();
 	}
 	
-	public Cozinha buscar (Long cozinhaId) {
-		Optional<Cozinha> cozinha = this.cozinhaRepository.findById(cozinhaId);
-		
-		if (cozinha.isEmpty()) {
-			throw new RecursoNaoEncontradoException("cozinha", cozinhaId);
-		}
-		
-		return cozinha.get();
+	public Cozinha buscaOuFalha (Long cozinhaId) {
+		return this.cozinhaRepository.findById(cozinhaId)
+				.orElseThrow(() -> new RecursoNaoEncontradoException("cozinha", cozinhaId));
 	}
 	
 	public Cozinha criar(Cozinha cozinha) {
@@ -39,13 +34,7 @@ public class CadastroCozinhaService {
 	}
 	
 	public Cozinha atualizar (Long cozinhaId, Cozinha cozinha) {
-		Optional<Cozinha> cozinhaOptional = this.cozinhaRepository.findById(cozinhaId);
-		
-		if (cozinhaOptional.isEmpty()) {
-			throw new RecursoNaoEncontradoException("cozinha", cozinhaId);
-		}
-		
-		Cozinha cozinhaAtual = cozinhaOptional.get();
+		Cozinha cozinhaAtual = this.buscaOuFalha(cozinhaId);
 		
 		BeanUtils.copyProperties(cozinha, cozinhaAtual, "id");
 		

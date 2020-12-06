@@ -20,6 +20,8 @@ import com.ruhancomh.myfood.domain.exception.EntidadeEmUsoException;
 import com.ruhancomh.myfood.domain.model.Cozinha;
 import com.ruhancomh.myfood.domain.service.CadastroCozinhaService;
 
+import lombok.NoArgsConstructor;
+
 @RestController
 @RequestMapping("/cozinhas")
 public class CozinhaController {
@@ -33,39 +35,24 @@ public class CozinhaController {
 	}
 	
 	@GetMapping("/{cozinhaId}")
-	public ResponseEntity<Cozinha> buscar (@PathVariable Long cozinhaId) {
-		try {
-			Cozinha cozinha = this.cadastroCozinhaService.buscar(cozinhaId);
-			return ResponseEntity.ok(cozinha);
-		}catch (RecursoNaoEncontradoException e) {
-			return ResponseEntity.notFound().build();
-		}
+	public Cozinha buscar (@PathVariable Long cozinhaId) {
+		return this.cadastroCozinhaService.buscaOuFalha(cozinhaId);
 	}
 	
-	@ResponseStatus(HttpStatus.CREATED)
 	@PostMapping
+	@ResponseStatus(HttpStatus.CREATED)
 	public Cozinha criar (@RequestBody Cozinha cozinha) {
 		return this.cadastroCozinhaService.criar(cozinha);
 	}
 	
 	@PutMapping("/{cozinhaId}")
-	public ResponseEntity<Cozinha> atualizar (@PathVariable Long cozinhaId, @RequestBody Cozinha cozinha) {
-		try {
-			return ResponseEntity.ok(this.cadastroCozinhaService.atualizar(cozinhaId, cozinha));
-		} catch (RecursoNaoEncontradoException e) {
-			return ResponseEntity.notFound().build();
-		}
+	public Cozinha atualizar (@PathVariable Long cozinhaId, @RequestBody Cozinha cozinha) {	
+		return this.cadastroCozinhaService.atualizar(cozinhaId, cozinha);
 	}
 	
 	@DeleteMapping("/{cozinhaId}")
-	public ResponseEntity<?> remover (@PathVariable Long cozinhaId) {
-		try {
+	@ResponseStatus(code = HttpStatus.NO_CONTENT)
+	public void remover (@PathVariable Long cozinhaId) {
 			this.cadastroCozinhaService.remover(cozinhaId);
-			return ResponseEntity.noContent().build();
-		} catch (RecursoNaoEncontradoException e) {
-			return ResponseEntity.notFound().build();
-		}catch (EntidadeEmUsoException e) {
-			return ResponseEntity.badRequest().body(e.getMessage());	
-		}
 	}
 }
