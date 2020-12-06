@@ -35,8 +35,7 @@ public class CadastroEstadoService {
 	}
 
 	public Estado atualizar(Long estadoId, Estado estado) {
-		Estado estadoAtual = this.estadoRepository.findById(estadoId)
-				.orElseThrow(() -> new RecursoNaoEncontradoException("estado", estadoId));
+		Estado estadoAtual = this.buscar(estadoId);
 		
 		BeanUtils.copyProperties(estado, estadoAtual, "id");
 		
