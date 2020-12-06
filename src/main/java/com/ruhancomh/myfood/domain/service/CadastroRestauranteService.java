@@ -8,17 +8,16 @@ import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
 
-import com.ruhancomh.myfood.domain.exception.EntidadeEmUsoException;
+import com.ruhancomh.myfood.domain.exception.CozinhaNaoEncontradaException;
 import com.ruhancomh.myfood.domain.exception.EntidadeRelacionadaNaoEncontradaException;
-import com.ruhancomh.myfood.domain.exception.RecursoNaoEncontradoException;
+import com.ruhancomh.myfood.domain.exception.RestauranteEmUsoException;
+import com.ruhancomh.myfood.domain.exception.RestauranteNaoEncontradoException;
 import com.ruhancomh.myfood.domain.model.Cozinha;
 import com.ruhancomh.myfood.domain.model.Restaurante;
 import com.ruhancomh.myfood.domain.repository.RestauranteRepository;
 
 @Service
 public class CadastroRestauranteService {
-
-	private static final String NOME_RECURSO = "restaurante";
 
 	@Autowired
 	private RestauranteRepository restauranteRepository;
@@ -32,7 +31,7 @@ public class CadastroRestauranteService {
 	
 	public Restaurante buscarOuFalhar (Long restauranteId) {
 		Restaurante restaurante = this.restauranteRepository.findById(restauranteId)
-				.orElseThrow(() -> new RecursoNaoEncontradoException(NOME_RECURSO, restauranteId));
+				.orElseThrow(() -> new RestauranteNaoEncontradoException(restauranteId));
 		
 		return restaurante;
 	}
@@ -64,9 +63,9 @@ public class CadastroRestauranteService {
 		try {
 			this.restauranteRepository.deleteById(restauranteId);
 		} catch (EmptyResultDataAccessException e) {
-			throw new RecursoNaoEncontradoException(NOME_RECURSO, restauranteId);
+			throw new RestauranteNaoEncontradoException(restauranteId, e);
 		} catch (DataIntegrityViolationException e) {
-			throw new EntidadeEmUsoException();
+			throw new RestauranteEmUsoException(e);
 		}
 	}
 	
@@ -74,7 +73,7 @@ public class CadastroRestauranteService {
 	private Cozinha getCozinhaRelacionada(Long cozinhaId) {
 		try {
 			return this.cadastroCozinhaService.buscarOuFalhar(cozinhaId);
-		} catch (EntidadeRelacionadaNaoEncontradaException e) {
+		} catch (CozinhaNaoEncontradaException e) {
 			throw new EntidadeRelacionadaNaoEncontradaException("cozinha", cozinhaId);
 		}
 	}

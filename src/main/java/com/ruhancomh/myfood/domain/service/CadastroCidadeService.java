@@ -8,17 +8,16 @@ import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
 
-import com.ruhancomh.myfood.domain.exception.EntidadeEmUsoException;
+import com.ruhancomh.myfood.domain.exception.CidadeEmUsoException;
+import com.ruhancomh.myfood.domain.exception.CidadeNaoEncontradaException;
 import com.ruhancomh.myfood.domain.exception.EntidadeRelacionadaNaoEncontradaException;
-import com.ruhancomh.myfood.domain.exception.RecursoNaoEncontradoException;
+import com.ruhancomh.myfood.domain.exception.EstadoNaoEncontradoException;
 import com.ruhancomh.myfood.domain.model.Cidade;
 import com.ruhancomh.myfood.domain.model.Estado;
 import com.ruhancomh.myfood.domain.repository.CidadeRepository;
 
 @Service
 public class CadastroCidadeService {
-
-	private static final String NOME_RECURSO = "cidade";
 
 	@Autowired
 	private CadastroEstadoService cadastroEstadoService;
@@ -32,7 +31,7 @@ public class CadastroCidadeService {
 	
 	public Cidade buscarOuFalhar (Long cidadeId) {
 		Cidade cidade = this.cidadeRepository.findById(cidadeId)
-				.orElseThrow(() -> new RecursoNaoEncontradoException(NOME_RECURSO, cidadeId));
+				.orElseThrow(() -> new CidadeNaoEncontradaException(cidadeId));
 		
 		return cidade;
 	}
@@ -62,10 +61,10 @@ public class CadastroCidadeService {
 		try {
 			this.cidadeRepository.deleteById(cidadeId);
 		} catch (EmptyResultDataAccessException e) {
-			throw new RecursoNaoEncontradoException(NOME_RECURSO, cidadeId);
+			throw new CidadeNaoEncontradaException(cidadeId, e);
 			
 		} catch (DataIntegrityViolationException e) {
-			throw new EntidadeEmUsoException();
+			throw new CidadeEmUsoException(e);
 			
 		}
 	}
@@ -73,7 +72,7 @@ public class CadastroCidadeService {
 	private Estado getEstadoRelacionado(Long estadoId) {
 		try {
 			return this.cadastroEstadoService.buscarOuFalhar(estadoId);
-		} catch (RecursoNaoEncontradoException e) {
+		} catch (EstadoNaoEncontradoException e) {
 			throw new EntidadeRelacionadaNaoEncontradaException("estado", estadoId);
 		}
 	}

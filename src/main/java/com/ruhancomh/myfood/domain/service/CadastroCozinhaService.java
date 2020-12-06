@@ -8,15 +8,13 @@ import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
 
-import com.ruhancomh.myfood.domain.exception.EntidadeEmUsoException;
-import com.ruhancomh.myfood.domain.exception.RecursoNaoEncontradoException;
+import com.ruhancomh.myfood.domain.exception.CozinhaEmUsoException;
+import com.ruhancomh.myfood.domain.exception.CozinhaNaoEncontradaException;
 import com.ruhancomh.myfood.domain.model.Cozinha;
 import com.ruhancomh.myfood.domain.repository.CozinhaRepository;
 
 @Service
 public class CadastroCozinhaService {
-
-	private static final String NOME_RECURSO = "cozinha";
 	
 	@Autowired
 	private CozinhaRepository cozinhaRepository;
@@ -27,7 +25,7 @@ public class CadastroCozinhaService {
 	
 	public Cozinha buscarOuFalhar (Long cozinhaId) {
 		return this.cozinhaRepository.findById(cozinhaId)
-				.orElseThrow(() -> new RecursoNaoEncontradoException(NOME_RECURSO, cozinhaId));
+				.orElseThrow(() -> new CozinhaNaoEncontradaException(cozinhaId));
 	}
 	
 	public Cozinha criar(Cozinha cozinha) {
@@ -47,10 +45,10 @@ public class CadastroCozinhaService {
 			this.cozinhaRepository.deleteById(cozinhaId);
 			
 		} catch (EmptyResultDataAccessException e) {
-			throw new RecursoNaoEncontradoException(NOME_RECURSO, cozinhaId);
+			throw new CozinhaNaoEncontradaException(cozinhaId, e);
 			
 		} catch (DataIntegrityViolationException e) {
-			throw new EntidadeEmUsoException();
+			throw new CozinhaEmUsoException(e);
 			
 		}
 	}

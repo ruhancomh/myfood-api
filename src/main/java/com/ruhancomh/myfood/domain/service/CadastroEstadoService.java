@@ -8,16 +8,14 @@ import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
 
-import com.ruhancomh.myfood.domain.exception.EntidadeEmUsoException;
-import com.ruhancomh.myfood.domain.exception.RecursoNaoEncontradoException;
+import com.ruhancomh.myfood.domain.exception.EstadoEmUsoException;
+import com.ruhancomh.myfood.domain.exception.EstadoNaoEncontradoException;
 import com.ruhancomh.myfood.domain.model.Estado;
 import com.ruhancomh.myfood.domain.repository.EstadoRepository;
 
 @Service
 public class CadastroEstadoService {
 
-	private static final String NOME_RECURSO = "estado";
-	
 	@Autowired
 	private EstadoRepository estadoRepository;
 	
@@ -27,7 +25,7 @@ public class CadastroEstadoService {
 
 	public Estado buscarOuFalhar(Long estadoId) {
 		Estado estado = this.estadoRepository.findById(estadoId)
-				.orElseThrow(() -> new RecursoNaoEncontradoException(NOME_RECURSO, estadoId));
+				.orElseThrow(() -> new EstadoNaoEncontradoException(estadoId));
 		
 		return estado;
 	}
@@ -48,9 +46,9 @@ public class CadastroEstadoService {
 		try {
 			this.estadoRepository.deleteById(estadoId);
 		} catch (EmptyResultDataAccessException e) {
-			throw new RecursoNaoEncontradoException(NOME_RECURSO, estadoId);
+			throw new EstadoNaoEncontradoException(estadoId, e);
 		}  catch (DataIntegrityViolationException e) {
-			throw new EntidadeEmUsoException();
+			throw new EstadoEmUsoException(e);
 		}
 	}
 }

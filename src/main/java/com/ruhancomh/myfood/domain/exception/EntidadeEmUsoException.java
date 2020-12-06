@@ -4,14 +4,18 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
 @ResponseStatus(code = HttpStatus.CONFLICT)
-public class EntidadeEmUsoException extends RuntimeException {
+public abstract class EntidadeEmUsoException extends NegocioException {
 
 	private static final long serialVersionUID = 1L;
 	
-	private static final String MENSAGEM = "Entidade não pode ser removida pois está em uso.";
+	public EntidadeEmUsoException(String message, Throwable cause) {
+		super(message, cause);
+		// TODO Auto-generated constructor stub
+	}
 
-	public EntidadeEmUsoException() {
-		super(MENSAGEM);
+	public EntidadeEmUsoException(String message) {
+		super(message);
+		// TODO Auto-generated constructor stub
 	}
 	
 }
