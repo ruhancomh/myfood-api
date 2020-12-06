@@ -31,7 +31,7 @@ public class RestauranteController {
 	
 	@GetMapping("/{restauranteId}")
 	public Restaurante buscar (@PathVariable Long restauranteId) {
-		return this.cadastroRestauranteService.buscaOuFalha(restauranteId);
+		return this.cadastroRestauranteService.buscarOuFalhar(restauranteId);
 	}
 	
 	@PostMapping

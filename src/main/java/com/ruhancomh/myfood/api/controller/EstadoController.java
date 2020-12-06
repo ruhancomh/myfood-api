@@ -31,7 +31,7 @@ public class EstadoController {
 	
 	@GetMapping("/{estadoId}")
 	public Estado buscar (@PathVariable Long estadoId) {
-		return this.estadoService.buscar(estadoId);
+		return this.estadoService.buscarOuFalhar(estadoId);
 	}
 	
 	@PostMapping

@@ -31,7 +31,7 @@ public class CidadeController {
 	
 	@GetMapping("/{cidadeId}")
 	public Cidade buscar (@PathVariable Long cidadeId) {
-		return this.cidadeService.buscaOuFalha(cidadeId);
+		return this.cidadeService.buscarOuFalhar(cidadeId);
 	}
 	
 	@PostMapping

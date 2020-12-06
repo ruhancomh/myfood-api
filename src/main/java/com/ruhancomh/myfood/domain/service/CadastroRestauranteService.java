@@ -9,37 +9,36 @@ import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
 
 import com.ruhancomh.myfood.domain.exception.EntidadeEmUsoException;
-import com.ruhancomh.myfood.domain.exception.EntidadeRelacionadaNaoEncontradaException;
 import com.ruhancomh.myfood.domain.exception.RecursoNaoEncontradoException;
 import com.ruhancomh.myfood.domain.model.Cozinha;
 import com.ruhancomh.myfood.domain.model.Restaurante;
-import com.ruhancomh.myfood.domain.repository.CozinhaRepository;
 import com.ruhancomh.myfood.domain.repository.RestauranteRepository;
 
 @Service
 public class CadastroRestauranteService {
 
+	private static final String NOME_RECURSO = "restaurante";
+
 	@Autowired
 	private RestauranteRepository restauranteRepository;
 	
 	@Autowired
-	private CozinhaRepository cozinhaRepository;
+	private CadastroCozinhaService cadastroCozinhaService;
 	
 	public List<Restaurante> listar () {
 		return this.restauranteRepository.findAll();
 	}
 	
-	public Restaurante buscaOuFalha (Long restauranteId) {
+	public Restaurante buscarOuFalhar (Long restauranteId) {
 		Restaurante restaurante = this.restauranteRepository.findById(restauranteId)
-				.orElseThrow(() -> new RecursoNaoEncontradoException("restaurante", restauranteId));
+				.orElseThrow(() -> new RecursoNaoEncontradoException(NOME_RECURSO, restauranteId));
 		
 		return restaurante;
 	}
 	
 	public Restaurante criar (Restaurante restaurante)  {
 		Long cozinhaId = restaurante.getCozinha().getId();
-		Cozinha cozinha = this.cozinhaRepository.findById(cozinhaId)
-				.orElseThrow(() -> new EntidadeRelacionadaNaoEncontradaException("cozinha", cozinhaId));
+		Cozinha cozinha = this.cadastroCozinhaService.buscarOuFalhar(cozinhaId);
 		
 		restaurante.setCozinha(cozinha);
 		
@@ -47,11 +46,10 @@ public class CadastroRestauranteService {
 	}
 
 	public Restaurante atualizar(Long restauranteId, Restaurante restaurante) {
-		Restaurante restauranteAtual = this.buscaOuFalha(restauranteId);
+		Restaurante restauranteAtual = this.buscarOuFalhar(restauranteId);
 		
 		Long cozinhaId = restaurante.getCozinha().getId();
-		Cozinha cozinha = this.cozinhaRepository.findById(cozinhaId)
-				.orElseThrow(() -> new EntidadeRelacionadaNaoEncontradaException("cozinha", cozinhaId));
+		Cozinha cozinha = this.cadastroCozinhaService.buscarOuFalhar(cozinhaId);
 		
 		BeanUtils.copyProperties(restaurante, restauranteAtual, "id", "formasPagamento", "endereco",
 				"dataCadastro", "produtos");
@@ -65,7 +63,7 @@ public class CadastroRestauranteService {
 		try {
 			this.restauranteRepository.deleteById(restauranteId);
 		} catch (EmptyResultDataAccessException e) {
-			throw new RecursoNaoEncontradoException("restaurante", restauranteId);
+			throw new RecursoNaoEncontradoException(NOME_RECURSO, restauranteId);
 		} catch (DataIntegrityViolationException e) {
 			throw new EntidadeEmUsoException();
 		}

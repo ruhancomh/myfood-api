@@ -16,6 +16,8 @@ import com.ruhancomh.myfood.domain.repository.CozinhaRepository;
 @Service
 public class CadastroCozinhaService {
 
+	private static final String NOME_RECURSO = "cozinha";
+	
 	@Autowired
 	private CozinhaRepository cozinhaRepository;
 	
@@ -23,9 +25,9 @@ public class CadastroCozinhaService {
 		return this.cozinhaRepository.findAll();
 	}
 	
-	public Cozinha buscaOuFalha (Long cozinhaId) {
+	public Cozinha buscarOuFalhar (Long cozinhaId) {
 		return this.cozinhaRepository.findById(cozinhaId)
-				.orElseThrow(() -> new RecursoNaoEncontradoException("cozinha", cozinhaId));
+				.orElseThrow(() -> new RecursoNaoEncontradoException(NOME_RECURSO, cozinhaId));
 	}
 	
 	public Cozinha criar(Cozinha cozinha) {
@@ -33,7 +35,7 @@ public class CadastroCozinhaService {
 	}
 	
 	public Cozinha atualizar (Long cozinhaId, Cozinha cozinha) {
-		Cozinha cozinhaAtual = this.buscaOuFalha(cozinhaId);
+		Cozinha cozinhaAtual = this.buscarOuFalhar(cozinhaId);
 		
 		BeanUtils.copyProperties(cozinha, cozinhaAtual, "id");
 		
@@ -45,7 +47,7 @@ public class CadastroCozinhaService {
 			this.cozinhaRepository.deleteById(cozinhaId);
 			
 		} catch (EmptyResultDataAccessException e) {
-			throw new RecursoNaoEncontradoException("cozinha", cozinhaId);
+			throw new RecursoNaoEncontradoException(NOME_RECURSO, cozinhaId);
 			
 		} catch (DataIntegrityViolationException e) {
 			throw new EntidadeEmUsoException();

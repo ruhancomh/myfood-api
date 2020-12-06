@@ -16,6 +16,8 @@ import com.ruhancomh.myfood.domain.repository.EstadoRepository;
 @Service
 public class CadastroEstadoService {
 
+	private static final String NOME_RECURSO = "estado";
+	
 	@Autowired
 	private EstadoRepository estadoRepository;
 	
@@ -23,9 +25,9 @@ public class CadastroEstadoService {
 		return this.estadoRepository.findAll();
 	}
 
-	public Estado buscar(Long estadoId) {
+	public Estado buscarOuFalhar(Long estadoId) {
 		Estado estado = this.estadoRepository.findById(estadoId)
-				.orElseThrow(() -> new RecursoNaoEncontradoException("estado", estadoId));
+				.orElseThrow(() -> new RecursoNaoEncontradoException(NOME_RECURSO, estadoId));
 		
 		return estado;
 	}
@@ -35,7 +37,7 @@ public class CadastroEstadoService {
 	}
 
 	public Estado atualizar(Long estadoId, Estado estado) {
-		Estado estadoAtual = this.buscar(estadoId);
+		Estado estadoAtual = this.buscarOuFalhar(estadoId);
 		
 		BeanUtils.copyProperties(estado, estadoAtual, "id");
 		
@@ -46,7 +48,7 @@ public class CadastroEstadoService {
 		try {
 			this.estadoRepository.deleteById(estadoId);
 		} catch (EmptyResultDataAccessException e) {
-			throw new RecursoNaoEncontradoException("estado", estadoId);
+			throw new RecursoNaoEncontradoException(NOME_RECURSO, estadoId);
 		}  catch (DataIntegrityViolationException e) {
 			throw new EntidadeEmUsoException();
 		}

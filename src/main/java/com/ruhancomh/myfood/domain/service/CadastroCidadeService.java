@@ -9,18 +9,18 @@ import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
 
 import com.ruhancomh.myfood.domain.exception.EntidadeEmUsoException;
-import com.ruhancomh.myfood.domain.exception.EntidadeRelacionadaNaoEncontradaException;
 import com.ruhancomh.myfood.domain.exception.RecursoNaoEncontradoException;
 import com.ruhancomh.myfood.domain.model.Cidade;
 import com.ruhancomh.myfood.domain.model.Estado;
 import com.ruhancomh.myfood.domain.repository.CidadeRepository;
-import com.ruhancomh.myfood.domain.repository.EstadoRepository;
 
 @Service
 public class CadastroCidadeService {
 
+	private static final String NOME_RECURSO = "cidade";
+
 	@Autowired
-	private EstadoRepository estadoRepository;
+	private CadastroEstadoService cadastroEstadoService;
 	
 	@Autowired
 	private CidadeRepository cidadeRepository;
@@ -29,17 +29,16 @@ public class CadastroCidadeService {
 		return this.cidadeRepository.findAll();
 	}
 	
-	public Cidade buscaOuFalha (Long cidadeId) {
+	public Cidade buscarOuFalhar (Long cidadeId) {
 		Cidade cidade = this.cidadeRepository.findById(cidadeId)
-				.orElseThrow(() -> new RecursoNaoEncontradoException("cidade", cidadeId));
+				.orElseThrow(() -> new RecursoNaoEncontradoException(NOME_RECURSO, cidadeId));
 		
 		return cidade;
 	}
 	
 	public Cidade cadastrar (Cidade cidade) {
 		Long estadoId = cidade.getEstado().getId();
-		Estado estado = this.estadoRepository.findById(estadoId)
-				.orElseThrow(() -> new EntidadeRelacionadaNaoEncontradaException("estado", estadoId));
+		Estado estado = this.cadastroEstadoService.buscarOuFalhar(estadoId);
 		
 		cidade.setEstado(estado);
 		
@@ -47,11 +46,10 @@ public class CadastroCidadeService {
 	}
 	
 	public Cidade atualizar(Long cidadeId, Cidade cidade) {
-		Cidade cidadeAtual = this.buscaOuFalha(cidadeId);
+		Cidade cidadeAtual = this.buscarOuFalhar(cidadeId);
 		
 		Long estadoId = cidade.getEstado().getId();
-		Estado estado = this.estadoRepository.findById(estadoId)
-				.orElseThrow(() -> new EntidadeRelacionadaNaoEncontradaException("estado", estadoId));
+		Estado estado = this.cadastroEstadoService.buscarOuFalhar(estadoId);
 		
 		BeanUtils.copyProperties(cidade, cidadeAtual, "id");
 		cidadeAtual.setEstado(estado);
@@ -63,7 +61,7 @@ public class CadastroCidadeService {
 		try {
 			this.cidadeRepository.deleteById(cidadeId);
 		} catch (EmptyResultDataAccessException e) {
-			throw new RecursoNaoEncontradoException("cidade", cidadeId);
+			throw new RecursoNaoEncontradoException(NOME_RECURSO, cidadeId);
 			
 		} catch (DataIntegrityViolationException e) {
 			throw new EntidadeEmUsoException();
