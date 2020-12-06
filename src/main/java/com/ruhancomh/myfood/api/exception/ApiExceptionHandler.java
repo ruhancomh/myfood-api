@@ -1,47 +1,92 @@
 package com.ruhancomh.myfood.api.exception;
 
-import java.time.LocalDateTime;
-
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.context.request.WebRequest;
+import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
 import com.ruhancomh.myfood.domain.exception.EntidadeEmUsoException;
+import com.ruhancomh.myfood.domain.exception.EntidadeRelacionadaNaoEncontradaException;
 import com.ruhancomh.myfood.domain.exception.NegocioException;
 import com.ruhancomh.myfood.domain.exception.RecursoNaoEncontradoException;
 
 @ControllerAdvice
-public class ApiExceptionHandler {
+public class ApiExceptionHandler extends ResponseEntityExceptionHandler{
 	
-	@ExceptionHandler(Throwable.class)
-	public ResponseEntity<?> defaultHandle(Throwable e) {
-		return this.formatResponse(HttpStatus.BAD_REQUEST, e);
+	@ExceptionHandler(Exception.class)
+	public ResponseEntity<Object> handleDefault(Exception ex, WebRequest request) {
+		return this.handleCustomException(HttpStatus.BAD_REQUEST, ExceptionTypes.NAO_MAPEADA, ex, request);
 	}
 	
 	@ExceptionHandler(NegocioException.class)
-	public ResponseEntity<?> handleNegocioException(NegocioException e) {
-		return this.formatResponse(HttpStatus.BAD_REQUEST, e);
+	public ResponseEntity<Object> handleNegocioException(NegocioException ex, WebRequest request) {
+		return this.handleCustomException(HttpStatus.BAD_REQUEST, ExceptionTypes.NEGOCIO, ex, request);
+	}
+	
+	@ExceptionHandler(EntidadeRelacionadaNaoEncontradaException.class)
+	public ResponseEntity<?> handleEntidadeRelacionadaNaoEncontrada(EntidadeRelacionadaNaoEncontradaException ex,
+			WebRequest request) {
+		return this.handleCustomException(HttpStatus.BAD_REQUEST,
+				ExceptionTypes.ENTIDADE_RELACIONADA_NAO_ENCONTRADA, ex, request);
 	}
 
 	@ExceptionHandler(RecursoNaoEncontradoException.class)
-	public ResponseEntity<?> handleRecursoNaoEncontrado(RecursoNaoEncontradoException e) {
-		return this.formatResponse(HttpStatus.NOT_FOUND, e);
+	public ResponseEntity<Object> handleRecursoNaoEncontrado(RecursoNaoEncontradoException ex, WebRequest request) {
+		return this.handleCustomException(HttpStatus.NOT_FOUND, ExceptionTypes.ENTIDADE_EM_USO, ex, request);
 	}
 	
 	@ExceptionHandler(EntidadeEmUsoException.class)
-	public ResponseEntity<?> handleEntidadeEmUso(EntidadeEmUsoException e) {
-		return this.formatResponse(HttpStatus.CONFLICT, e);
+	public ResponseEntity<Object> handleEntidadeEmUso(EntidadeEmUsoException ex, WebRequest request) {
+		return this.handleCustomException(HttpStatus.CONFLICT, ExceptionTypes.ENTIDADE_EM_USO, ex, request);
 	}
 	
-	private ResponseEntity<?> formatResponse(HttpStatus status, Throwable e) {
-		return ResponseEntity.status(status).body(this.getExceptionResponse(e));
+	private ResponseEntity<Object> handleCustomException(HttpStatus status, ExceptionTypes exceptionType,
+			Exception ex, WebRequest request) {
+		return this.handleExceptionInternal(ex, this.getCustomExceptionResponse(status, exceptionType, ex), new HttpHeaders(), status, request);
 	}
-	
-	private ExceptionResponse getExceptionResponse(Throwable e) {
+
+	private ExceptionResponse getCustomExceptionResponse(HttpStatus status, ExceptionTypes exceptionType,
+			Exception ex) {
 		return ExceptionResponse.builder()
-				.mensagem(e.getMessage())
-				.dataHora(LocalDateTime.now())
+				.status(status.value())
+				.type(exceptionType.getType())
+				.title(exceptionType.getTitle())
+				.detail(ex.getMessage())
 				.build();
 	}
+	
+	@Override
+	protected ResponseEntity<Object> handleExceptionInternal(Exception ex, Object body, HttpHeaders headers,
+			HttpStatus status, WebRequest request) {
+		return super.handleExceptionInternal(ex, this.getDefaultExceptionResponse(ex, body, status),
+				headers, status, request);
+	}
+	
+	protected ResponseEntity<Object> handleExceptionInternal(Exception ex, ExceptionResponse body, HttpHeaders headers,
+			HttpStatus status, WebRequest request) {
+		return super.handleExceptionInternal(ex, body, headers, status, request);
+	}
+	
+	private ExceptionResponse getDefaultExceptionResponse(Exception ex, Object body, HttpStatus status) {	
+		return ExceptionResponse.builder()
+				.title(this.getDefaultExceptionTitle(body, status))
+				.status(status.value())
+				.build();
+	}
+
+	private String getDefaultExceptionTitle(Object body, HttpStatus status) {
+		if (body == null) {
+			return status.getReasonPhrase();
+		}
+		
+		if (body instanceof String) {
+			return (String) body;
+		}
+		
+		return "Error";
+	}
+	
 }

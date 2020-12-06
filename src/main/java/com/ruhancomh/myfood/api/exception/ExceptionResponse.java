@@ -1,15 +1,19 @@
 package com.ruhancomh.myfood.api.exception;
 
-import java.time.LocalDateTime;
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonInclude.Include;
 
 import lombok.Builder;
 import lombok.Getter;
 
+@JsonInclude(Include.NON_NULL)
 @Getter
 @Builder
 public class ExceptionResponse {
 
-	private String mensagem;
-	private LocalDateTime dataHora;
+	private Integer status;
+	private String type;
+	private String title;
+	private String detail;
 	
 }
