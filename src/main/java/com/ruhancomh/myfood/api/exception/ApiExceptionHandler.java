@@ -6,6 +6,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.context.request.WebRequest;
+import org.springframework.web.servlet.NoHandlerFoundException;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
 import com.ruhancomh.myfood.domain.exception.EntidadeEmUsoException;
@@ -20,6 +21,12 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler{
 	public ResponseEntity<Object> handleDefault(Exception ex, WebRequest request) {
 		return this.handleCustomException(HttpStatus.BAD_REQUEST, ExceptionTypes.NAO_MAPEADA, ex, request);
 	}
+	
+	@Override
+	protected ResponseEntity<Object> handleNoHandlerFoundException(NoHandlerFoundException ex, 
+	        HttpHeaders headers, HttpStatus status, WebRequest request) {
+		return this.handleCustomException(status, ExceptionTypes.URI_NAO_ENCONTRADO, ex, request);
+	}   
 	
 	@ExceptionHandler(NegocioException.class)
 	public ResponseEntity<Object> handleNegocioException(NegocioException ex, WebRequest request) {

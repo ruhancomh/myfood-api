@@ -2,6 +2,8 @@ package com.ruhancomh.myfood.api.controller;
 
 import java.util.List;
 
+import javax.validation.Valid;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -36,12 +38,13 @@ public class CozinhaController {
 	
 	@PostMapping
 	@ResponseStatus(HttpStatus.CREATED)
-	public Cozinha criar (@RequestBody Cozinha cozinha) {
+	public Cozinha criar (@RequestBody @Valid Cozinha cozinha) {
 		return this.cadastroCozinhaService.criar(cozinha);
 	}
 	
 	@PutMapping("/{cozinhaId}")
-	public Cozinha atualizar (@PathVariable Long cozinhaId, @RequestBody Cozinha cozinha) {	
+	public Cozinha atualizar (@PathVariable Long cozinhaId,
+			@RequestBody @Valid Cozinha cozinha) {	
 		return this.cadastroCozinhaService.atualizar(cozinhaId, cozinha);
 	}
 	

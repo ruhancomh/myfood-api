@@ -2,6 +2,8 @@ package com.ruhancomh.myfood.api.controller;
 
 import java.util.List;
 
+import javax.validation.Valid;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -36,12 +38,13 @@ public class EstadoController {
 	
 	@PostMapping
 	@ResponseStatus(code = HttpStatus.CREATED)
-	public Estado cadastrar (@RequestBody Estado estado) {
+	public Estado cadastrar (@RequestBody @Valid Estado estado) {
 		return this.estadoService.cadastrar(estado);
 	}
 	
 	@PutMapping("/{estadoId}")
-	public Estado atualizar (@PathVariable Long estadoId, @RequestBody Estado estado) {
+	public Estado atualizar (@PathVariable Long estadoId,
+			@RequestBody @Valid Estado estado) {
 		return this.estadoService.atualizar(estadoId, estado);
 	}
 	

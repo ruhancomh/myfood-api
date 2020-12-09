@@ -8,6 +8,7 @@ public enum ExceptionTypes {
 	RECURSO_NAO_ENCONTRADO("Recurso não encontrado", "RECURSO_NAO_ENCONTRADO"),
 	ENTIDADE_RELACIONADA_NAO_ENCONTRADA("Entidade relacionada não encontrada", "ENTIDADE_RELACIONADA_NAO_ENCONTRADA"),
 	NEGOCIO("Exceção de negócio", "NEGOCIO_EXCEPTION"),
+	URI_NAO_ENCONTRADO("URI não encontrado", "URI_NAO_ENCONTRADO"),
 	NAO_MAPEADA("Exceção não mapeada", "NAO_MAPEADA");
 	
 	private String title;
