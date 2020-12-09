@@ -12,7 +12,7 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.groups.ConvertGroup;
 import javax.validation.groups.Default;
 
-import com.ruhancomh.myfood.Groups;
+import com.ruhancomh.myfood.core.validation.Groups;
 import com.sun.istack.NotNull;
 
 import lombok.Data;

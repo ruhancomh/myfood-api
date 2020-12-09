@@ -1,4 +1,4 @@
-package com.ruhancomh.myfood;
+package com.ruhancomh.myfood.core.validation;
 
 public interface Groups {
 
