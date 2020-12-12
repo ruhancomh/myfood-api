@@ -1,7 +1,7 @@
 package com.ruhancomh.myfood.domain.model;
 
 import java.math.BigDecimal;
-import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -45,11 +45,11 @@ public class Pedido {
 	
 	@CreationTimestamp
 	@Column(nullable = false)
-	private LocalDateTime dataCriacao;
+	private OffsetDateTime dataCriacao;
 	
-	private LocalDateTime dataConfirmacao;
-	private LocalDateTime dataCancelamento;
-	private LocalDateTime dataDentrega;
+	private OffsetDateTime dataConfirmacao;
+	private OffsetDateTime dataCancelamento;
+	private OffsetDateTime dataDentrega;
 	
 	@Embedded
 	private Endereco endereco;

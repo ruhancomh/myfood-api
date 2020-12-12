@@ -3,7 +3,7 @@ package com.ruhancomh.myfood.api.model.mixin;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.ruhancomh.myfood.domain.model.Estado;
 
-public class CidadeMixin {
+public abstract class CidadeMixin {
 	
 	@JsonIgnoreProperties(value = "nome", allowGetters = true)
 	private Estado estado;

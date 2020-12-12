@@ -5,7 +5,7 @@ import java.util.List;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.ruhancomh.myfood.domain.model.Restaurante;
 
-public class CozinhaMixin {
+public abstract class CozinhaMixin {
 
 	@JsonIgnore
 	private List<Restaurante> restaurantes;
