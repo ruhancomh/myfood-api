@@ -16,6 +16,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.ruhancomh.myfood.api.mapper.estado.ApiEstadoMapperFactory;
+import com.ruhancomh.myfood.api.resources.request.estado.CreateEstadoRequest;
+import com.ruhancomh.myfood.api.resources.request.estado.UpdateEstadoResquest;
+import com.ruhancomh.myfood.api.resources.response.estado.CreateEstadoResponse;
+import com.ruhancomh.myfood.api.resources.response.estado.UpdateEstadoResponse;
 import com.ruhancomh.myfood.domain.model.Estado;
 import com.ruhancomh.myfood.domain.service.CadastroEstadoService;
 
@@ -25,6 +30,9 @@ public class EstadoController {
 
 	@Autowired
 	private CadastroEstadoService estadoService;
+	
+	@Autowired
+	private ApiEstadoMapperFactory estadoMapperFactory;
 	
 	@GetMapping
 	public List<Estado> listar () {
@@ -38,14 +46,24 @@ public class EstadoController {
 	
 	@PostMapping
 	@ResponseStatus(code = HttpStatus.CREATED)
-	public Estado cadastrar (@RequestBody @Valid Estado estado) {
-		return this.estadoService.cadastrar(estado);
+	public CreateEstadoResponse cadastrar (@RequestBody @Valid CreateEstadoRequest createEstado) {
+		var response = this.estadoService.cadastrar(
+				this.estadoMapperFactory
+					.getFromCreateEstadoRequestToCreateEstadoDto()
+					.map(createEstado)
+			);
+		
+		return this.estadoMapperFactory.getFromEstadoToCreateEstadoResponse().map(response);
 	}
 	
 	@PutMapping("/{estadoId}")
-	public Estado atualizar (@PathVariable Long estadoId,
-			@RequestBody @Valid Estado estado) {
-		return this.estadoService.atualizar(estadoId, estado);
+	public UpdateEstadoResponse atualizar (@PathVariable Long estadoId,
+			@RequestBody @Valid UpdateEstadoResquest updateEstado) {
+		
+		var response = this.estadoService.atualizar(estadoId,
+				this.estadoMapperFactory.getFromUpdateEstadoRequestToUpdateEstadoDto().map(updateEstado));
+		
+		return this.estadoMapperFactory.getFromEstadoToUpdateEstadoResponse().map(response);
 	}
 	
 	@DeleteMapping("/{estadoId}")
