@@ -2,6 +2,8 @@ package com.ruhancomh.myfood.domain.service;
 
 import java.util.List;
 
+import javax.transaction.Transactional;
+
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
@@ -36,6 +38,7 @@ public class CadastroCidadeService {
 		return cidade;
 	}
 	
+	@Transactional
 	public Cidade cadastrar (Cidade cidade) {
 		Long estadoId = cidade.getEstado().getId();
 		Estado estado = this.getEstadoRelacionado(estadoId);
@@ -45,6 +48,7 @@ public class CadastroCidadeService {
 		return this.cidadeRepository.save(cidade);
 	}
 	
+	@Transactional
 	public Cidade atualizar(Long cidadeId, Cidade cidade) {
 		Cidade cidadeAtual = this.buscarOuFalhar(cidadeId);
 		
@@ -57,6 +61,7 @@ public class CadastroCidadeService {
 		return this.cidadeRepository.save(cidadeAtual);
 	}
 	
+	@Transactional
 	public void remover (Long cidadeId) {
 		try {
 			this.cidadeRepository.deleteById(cidadeId);

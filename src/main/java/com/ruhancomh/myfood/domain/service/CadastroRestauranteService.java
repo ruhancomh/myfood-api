@@ -2,6 +2,8 @@ package com.ruhancomh.myfood.domain.service;
 
 import java.util.List;
 
+import javax.transaction.Transactional;
+
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
@@ -36,6 +38,7 @@ public class CadastroRestauranteService {
 		return restaurante;
 	}
 	
+	@Transactional
 	public Restaurante criar (Restaurante restaurante)  {
 		Long cozinhaId = restaurante.getCozinha().getId();
 		Cozinha cozinha = this.getCozinhaRelacionada(cozinhaId);
@@ -45,6 +48,7 @@ public class CadastroRestauranteService {
 		return this.restauranteRepository.save(restaurante);	
 	}
 
+	@Transactional
 	public Restaurante atualizar(Long restauranteId, Restaurante restaurante) {
 		Restaurante restauranteAtual = this.buscarOuFalhar(restauranteId);
 		
@@ -59,6 +63,7 @@ public class CadastroRestauranteService {
 		return this.restauranteRepository.save(restauranteAtual);
 	}
 
+	@Transactional
 	public void remover(Long restauranteId) {
 		try {
 			this.restauranteRepository.deleteById(restauranteId);
