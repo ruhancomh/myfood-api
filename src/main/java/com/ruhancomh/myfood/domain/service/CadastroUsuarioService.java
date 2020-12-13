@@ -65,6 +65,7 @@ public class CadastroUsuarioService {
 		this.usuarioRepository.flush();
 	}
 	
+	@Transactional
 	public void remover(Long usuarioId) {
 		try {
 			this.usuarioRepository.deleteById(usuarioId);
