@@ -83,7 +83,7 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler{
 
 	@ExceptionHandler(RecursoNaoEncontradoException.class)
 	public ResponseEntity<Object> handleRecursoNaoEncontrado(RecursoNaoEncontradoException ex, WebRequest request) {
-		return this.handleCustomException(HttpStatus.NOT_FOUND, ExceptionTypes.ENTIDADE_EM_USO, ex, request);
+		return this.handleCustomException(HttpStatus.NOT_FOUND, ExceptionTypes.RECURSO_NAO_ENCONTRADO, ex, request);
 	}
 	
 	@ExceptionHandler(EntidadeEmUsoException.class)
