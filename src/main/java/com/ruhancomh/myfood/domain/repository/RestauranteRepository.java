@@ -13,7 +13,7 @@ public interface RestauranteRepository
 	extends CustomRepositoryBase<Restaurante, Long>, RestauranteRepositoryCustom,
 	JpaSpecificationExecutor<Restaurante> {
 	
-	@Query("from Restaurante r join fetch r.cozinha left join fetch r.formasPagamento")
+	@Query("from Restaurante r join fetch r.cozinha")
 	public List<Restaurante> findAll();
 	
 }

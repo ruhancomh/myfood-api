@@ -4,12 +4,14 @@ import java.util.List;
 
 import javax.transaction.Transactional;
 
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
 
+import com.ruhancomh.myfood.domain.dto.CreateRestauranteDto;
 import com.ruhancomh.myfood.domain.exception.CozinhaNaoEncontradaException;
 import com.ruhancomh.myfood.domain.exception.EntidadeRelacionadaNaoEncontradaException;
 import com.ruhancomh.myfood.domain.exception.RestauranteEmUsoException;
@@ -27,6 +29,9 @@ public class CadastroRestauranteService {
 	@Autowired
 	private CadastroCozinhaService cadastroCozinhaService;
 	
+	@Autowired
+	private ModelMapper modelMapper;
+	
 	public List<Restaurante> listar () {
 		return this.restauranteRepository.findAll();
 	}
@@ -39,11 +44,14 @@ public class CadastroRestauranteService {
 	}
 	
 	@Transactional
-	public Restaurante criar (Restaurante restaurante)  {
-		Long cozinhaId = restaurante.getCozinha().getId();
+	public Restaurante criar (CreateRestauranteDto dto)  {
+		Long cozinhaId = dto.getCozinhaId();
 		Cozinha cozinha = this.getCozinhaRelacionada(cozinhaId);
 		
+		Restaurante restaurante = this.modelMapper.map(dto, Restaurante.class);
+		
 		restaurante.setCozinha(cozinha);
+		restaurante.setId(null);
 		
 		return this.restauranteRepository.save(restaurante);	
 	}

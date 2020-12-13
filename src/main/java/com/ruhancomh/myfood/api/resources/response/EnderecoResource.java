@@ -1,7 +1,5 @@
 package com.ruhancomh.myfood.api.resources.response;
 
-import com.ruhancomh.myfood.api.resources.response.cidade.CidadeResource;
-
 import lombok.Getter;
 import lombok.Setter;
 
@@ -14,6 +12,7 @@ public class EnderecoResource {
 	private String numero;
 	private String complemento;
 	private String bairro;
-	private CidadeResource cidade;
+	private String cidadeNome;
+	private String cidadeEstadoNome;
 	
 }

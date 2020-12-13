@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.ruhancomh.myfood.api.mapper.restaurante.ApiRestauranteMapperFactory;
+import com.ruhancomh.myfood.api.resources.request.restaurante.CreateRestauranteRequest;
 import com.ruhancomh.myfood.api.resources.response.restaurante.RestauranteResource;
 import com.ruhancomh.myfood.domain.model.Restaurante;
 import com.ruhancomh.myfood.domain.service.CadastroRestauranteService;
@@ -33,8 +34,11 @@ public class RestauranteController {
 	private ApiRestauranteMapperFactory restauranteMapperFactory;
 	
 	@GetMapping
-	public List<Restaurante> listar () {
-		return this.cadastroRestauranteService.listar();
+	public List<RestauranteResource> listar () {
+		var restaurantes = this.cadastroRestauranteService.listar();
+		
+		return  this.restauranteMapperFactory.getFromListRestauranteToListRestauranteResource()
+					.map(restaurantes);
 	}
 	
 	@GetMapping("/{restauranteId}")
@@ -45,8 +49,11 @@ public class RestauranteController {
 	
 	@PostMapping
 	@ResponseStatus(code = HttpStatus.CREATED)
-	public Restaurante criar (@RequestBody @Valid Restaurante restaurante) {
-		return this.cadastroRestauranteService.criar(restaurante);
+	public Restaurante criar (@RequestBody @Valid CreateRestauranteRequest restauranteRequest) {
+		return this.cadastroRestauranteService.criar(
+				this.restauranteMapperFactory
+					.getFromCreateRestauranteRequestToCreateRestauranteDto()
+					.map(restauranteRequest));
 	}
 	
 	@PutMapping("/{restauranteId}")

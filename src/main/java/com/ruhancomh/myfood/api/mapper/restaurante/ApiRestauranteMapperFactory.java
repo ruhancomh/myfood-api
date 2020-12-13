@@ -14,4 +14,12 @@ public class ApiRestauranteMapperFactory {
 	@Lazy
 	private FromRestauranteToRestauranteResource fromRestauranteToRestauranteResource;
 	
+	@Autowired
+	@Lazy
+	private FromCreateRestauranteRequestToCreateRestauranteDto fromCreateRestauranteRequestToCreateRestauranteDto;
+	
+	@Autowired
+	@Lazy
+	private FromListRestauranteToListRestauranteResource fromListRestauranteToListRestauranteResource;
+	
 }
