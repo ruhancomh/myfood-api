@@ -75,6 +75,17 @@ public class CadastroRestauranteService {
 		}
 	}
 	
+	@Transactional
+	public void ativar(Long restauranteId) {
+		var restaurante = this.buscarOuFalhar(restauranteId);
+		restaurante.setAtivo(Boolean.TRUE);
+	}
+	
+	@Transactional
+	public void inativar(Long restauranteId) {
+		var restaurante = this.buscarOuFalhar(restauranteId);
+		restaurante.setAtivo(Boolean.FALSE);
+	}
 	
 	private Cozinha getCozinhaRelacionada(Long cozinhaId) {
 		try {

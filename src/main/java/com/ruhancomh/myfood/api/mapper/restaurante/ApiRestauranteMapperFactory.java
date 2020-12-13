@@ -1,4 +1,4 @@
-package com.ruhancomh.myfood.domain.mapper.estado;
+package com.ruhancomh.myfood.api.mapper.restaurante;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
@@ -8,10 +8,10 @@ import lombok.Getter;
 
 @Getter
 @Component
-public class EstadoMapperFactory {
+public class ApiRestauranteMapperFactory {
 
 	@Autowired
 	@Lazy
-	private FromCreateEstadoDtoToEstado fromCreateEstadoDtoToEstado;
+	private FromRestauranteToRestauranteResource fromRestauranteToRestauranteResource;
 	
 }
