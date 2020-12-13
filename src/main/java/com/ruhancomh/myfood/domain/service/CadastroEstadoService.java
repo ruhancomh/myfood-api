@@ -4,7 +4,6 @@ import java.util.List;
 
 import javax.transaction.Transactional;
 
-import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.EmptyResultDataAccessException;
@@ -58,6 +57,7 @@ public class CadastroEstadoService {
 	public void remover(Long estadoId) {
 		try {
 			this.estadoRepository.deleteById(estadoId);
+			this.estadoRepository.flush();
 		} catch (EmptyResultDataAccessException e) {
 			throw new EstadoNaoEncontradoException(estadoId, e);
 		}  catch (DataIntegrityViolationException e) {

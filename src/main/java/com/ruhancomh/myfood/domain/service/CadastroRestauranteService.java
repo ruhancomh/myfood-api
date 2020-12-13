@@ -67,6 +67,7 @@ public class CadastroRestauranteService {
 	public void remover(Long restauranteId) {
 		try {
 			this.restauranteRepository.deleteById(restauranteId);
+			this.restauranteRepository.flush();
 		} catch (EmptyResultDataAccessException e) {
 			throw new RestauranteNaoEncontradoException(restauranteId, e);
 		} catch (DataIntegrityViolationException e) {
