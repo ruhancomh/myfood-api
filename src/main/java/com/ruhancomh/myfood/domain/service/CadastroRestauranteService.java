@@ -114,6 +114,18 @@ public class CadastroRestauranteService {
 		restaurante.getFormasPagamento().add(formaPagamento);
 	}
 	
+	@Transactional
+	public void abrir(Long restauranteId) {
+		var restaurante = this.buscarOuFalhar(restauranteId);
+		restaurante.setAberto(Boolean.TRUE);
+	}
+	
+	@Transactional
+	public void fechar(Long restauranteId) {
+		var restaurante = this.buscarOuFalhar(restauranteId);
+		restaurante.setAberto(Boolean.FALSE);
+	}
+	
 	private Cozinha getCozinhaRelacionada(Long cozinhaId) {
 		try {
 			return this.cadastroCozinhaService.buscarOuFalhar(cozinhaId);

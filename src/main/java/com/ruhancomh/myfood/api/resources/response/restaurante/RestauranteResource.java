@@ -21,6 +21,7 @@ public class RestauranteResource {
 	private SimpleCozinhaResource cozinha;
 	private EnderecoResource endereco;
 	private Boolean ativo;
+	private Boolean aberto;
 	private OffsetDateTime dataCadastro;
 	private OffsetDateTime dataAtualizacao;
 	private List<FormaPagamentoResource> formasPagamento;

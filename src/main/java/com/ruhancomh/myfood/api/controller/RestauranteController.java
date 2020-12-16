@@ -80,4 +80,15 @@ public class RestauranteController {
 		this.cadastroRestauranteService.inativar(restauranteId);
 	}
 	
+	@PatchMapping("/{restauranteId}/fechamento")
+	@ResponseStatus(code = HttpStatus.NO_CONTENT)
+	public void fechar(@PathVariable Long restauranteId) {
+		this.cadastroRestauranteService.fechar(restauranteId);
+	}
+	
+	@PatchMapping("/{restauranteId}/abertura")
+	@ResponseStatus(code = HttpStatus.NO_CONTENT)
+	public void abrir(@PathVariable Long restauranteId) {
+		this.cadastroRestauranteService.abrir(restauranteId);
+	}
 }
