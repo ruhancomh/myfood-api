@@ -26,10 +26,15 @@ public class CadastroFormaPagamentoService {
 		return this.formaPagamentoRepository.findAll();
 	}
 	
+	public List<FormaPagamento> listarPorRestaurante(Long restauranteId) {
+		return this.formaPagamentoRepository.findByRestaurante(restauranteId);
+	}
+	
 	public FormaPagamento buscarOuFalhar(Long formaPagamentoid) {
 		return this.formaPagamentoRepository.findById(formaPagamentoid)
 				.orElseThrow(() -> new FormaDePagamentoNaoEncontradaException(formaPagamentoid));
 	}
+	
 	
 	@Transactional
 	public FormaPagamento cadastrar(CreateFormaPagamentoDto dto) {

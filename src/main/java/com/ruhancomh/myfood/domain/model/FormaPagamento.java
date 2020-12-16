@@ -1,10 +1,14 @@
 package com.ruhancomh.myfood.domain.model;
 
+import java.util.HashSet;
+import java.util.Set;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.ManyToMany;
 import javax.persistence.Table;
 
 import lombok.Data;
@@ -24,4 +28,6 @@ public class FormaPagamento {
 	@Column(nullable = false)
 	private String descricao;
 	
+	@ManyToMany(mappedBy = "formasPagamento")
+	private Set<Restaurante> restaurantes = new HashSet<>();
 }

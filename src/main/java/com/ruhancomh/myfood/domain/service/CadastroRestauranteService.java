@@ -30,6 +30,9 @@ public class CadastroRestauranteService {
 	private CadastroCozinhaService cadastroCozinhaService;
 	
 	@Autowired
+	private CadastroFormaPagamentoService cadastroFormaPagamentoService;
+	
+	@Autowired
 	private ModelMapper modelMapper;
 	
 	public List<Restaurante> listar () {
@@ -93,6 +96,22 @@ public class CadastroRestauranteService {
 	public void inativar(Long restauranteId) {
 		var restaurante = this.buscarOuFalhar(restauranteId);
 		restaurante.setAtivo(Boolean.FALSE);
+	}
+	
+	@Transactional
+	public void desassociarFormaPagamento(Long restauranteId, Long formaPagamentoId) {
+		var restaurante = this.buscarOuFalhar(restauranteId);
+		var formaPagamento = this.cadastroFormaPagamentoService.buscarOuFalhar(formaPagamentoId);
+		
+		restaurante.getFormasPagamento().remove(formaPagamento);
+	}
+	
+	@Transactional
+	public void associarFormaDePagamento(Long restauranteId, Long formaPagamentoId) {
+		var restaurante = this.buscarOuFalhar(restauranteId);
+		var formaPagamento = this.cadastroFormaPagamentoService.buscarOuFalhar(formaPagamentoId);
+		
+		restaurante.getFormasPagamento().add(formaPagamento);
 	}
 	
 	private Cozinha getCozinhaRelacionada(Long cozinhaId) {
