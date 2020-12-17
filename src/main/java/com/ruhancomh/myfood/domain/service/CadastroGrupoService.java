@@ -29,6 +29,10 @@ public class CadastroGrupoService {
 		return this.grupoRepository.findAll();
 	}
 	
+	public List<Grupo> listarPorUsuario(Long usuarioId) {
+		return this.grupoRepository.findByUsuario(usuarioId);
+	}
+	
 	public Grupo buscarOuFalhar(Long grupoId) {
 		return this.grupoRepository.findById(grupoId)
 				.orElseThrow(() -> new GrupoNaoEncontradoException(grupoId));

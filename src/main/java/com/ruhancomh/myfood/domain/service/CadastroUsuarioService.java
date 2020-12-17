@@ -22,6 +22,9 @@ public class CadastroUsuarioService {
 	@Autowired
 	private UsuarioRepository usuarioRepository;
 	
+	@Autowired
+	private CadastroGrupoService cadastroGrupoService;
+	
 	public List<Usuario> listar() {
 		return this.usuarioRepository.findAll();
 	}
@@ -73,6 +76,22 @@ public class CadastroUsuarioService {
 		} catch (EmptyResultDataAccessException e) {
 			throw new UsuarioNaoEncontradoException(usuarioId, e);
 		}
+	}
+	
+	@Transactional
+	public void associarGrupo(Long usuarioId, Long grupoId) {
+		var usuario = this.buscarOuFalhar(usuarioId);
+		var grupo = this.cadastroGrupoService.buscarOuFalhar(grupoId);
+		
+		usuario.getGrupos().add(grupo);
+	}
+	
+	@Transactional
+	public void desassociarGrupo(Long usuarioId, Long grupoId) {
+		var usuario = this.buscarOuFalhar(usuarioId);
+		var grupo = this.cadastroGrupoService.buscarOuFalhar(grupoId);
+		
+		usuario.getGrupos().remove(grupo);
 	}
 	
 }

@@ -5,7 +5,7 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class GrupoResource {
+public class GrupoRessource {
 
 	private Long id;
 	private String nome;

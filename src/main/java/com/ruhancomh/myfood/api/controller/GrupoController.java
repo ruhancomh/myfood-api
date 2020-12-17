@@ -19,7 +19,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.ruhancomh.myfood.api.mapper.grupo.ApiGrupoMapperFactory;
 import com.ruhancomh.myfood.api.resources.request.grupo.CreateGrupoRequest;
 import com.ruhancomh.myfood.api.resources.request.grupo.UpdateGrupoRequest;
-import com.ruhancomh.myfood.api.resources.response.grupo.GrupoResource;
+import com.ruhancomh.myfood.api.resources.response.grupo.GrupoRessource;
 import com.ruhancomh.myfood.domain.service.CadastroGrupoService;
 
 @RestController
@@ -33,7 +33,7 @@ public class GrupoController {
 	private ApiGrupoMapperFactory grupoMapperFactory;
 	
 	@GetMapping
-	public List<GrupoResource> listar() {
+	public List<GrupoRessource> listar() {
 		var listGrupos = this.grupoService.listar();
 		
 		return this.grupoMapperFactory.getFromListGrupoToListGrupoResource()
@@ -41,7 +41,7 @@ public class GrupoController {
 	}
 	
 	@GetMapping("/{grupoId}")
-	public GrupoResource buscar(@PathVariable Long grupoId) {
+	public GrupoRessource buscar(@PathVariable Long grupoId) {
 		var grupo = this.grupoService.buscarOuFalhar(grupoId);
 		
 		return this.grupoMapperFactory.getFromGrupoToGrupoResource()
@@ -50,7 +50,7 @@ public class GrupoController {
 	
 	@PostMapping
 	@ResponseStatus(code = HttpStatus.CREATED)
-	public GrupoResource cadastrar(@RequestBody @Valid CreateGrupoRequest request) {
+	public GrupoRessource cadastrar(@RequestBody @Valid CreateGrupoRequest request) {
 		var grupo = this.grupoService.criar(this.grupoMapperFactory
 				.getFromCreateGrupoRequestToCreateGrupoDto()
 				.map(request));
@@ -60,7 +60,7 @@ public class GrupoController {
 	}
 	
 	@PutMapping("/{grupoId}")
-	public GrupoResource atualizar(@PathVariable Long grupoId,
+	public GrupoRessource atualizar(@PathVariable Long grupoId,
 			@RequestBody @Valid UpdateGrupoRequest request) {
 		
 		var grupo = this.grupoService.atualizar(grupoId,

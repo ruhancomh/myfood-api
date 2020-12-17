@@ -7,21 +7,21 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Component;
 
-import com.ruhancomh.myfood.api.resources.response.grupo.GrupoResource;
+import com.ruhancomh.myfood.api.resources.response.grupo.GrupoRessource;
 import com.ruhancomh.myfood.core.mapper.Mapper;
 import com.ruhancomh.myfood.domain.model.Grupo;
 
 @Component
 @Lazy
 public class FromListGrupoToListGrupoResource
-	implements Mapper<List<Grupo>, List<GrupoResource>>{
+	implements Mapper<List<Grupo>, List<GrupoRessource>>{
 
 	@Autowired
 	@Lazy
 	private ApiGrupoMapperFactory grupoMapperFactory;
 	
 	@Override
-	public List<GrupoResource> map(List<Grupo> source) {
+	public List<GrupoRessource> map(List<Grupo> source) {
 		return source.stream()
 				.map(grupo -> this.grupoMapperFactory
 						.getFromGrupoToGrupoResource()

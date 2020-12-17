@@ -34,4 +34,7 @@ public class Grupo {
 			inverseJoinColumns = @JoinColumn(name = "permissao_id"))
 	private Set<Permissao> permissoes = new HashSet<>();
 	
+	@ManyToMany(mappedBy = "grupos")
+	private Set<Usuario> usuarios = new HashSet<>();
+	
 }
