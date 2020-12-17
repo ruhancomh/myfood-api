@@ -22,6 +22,9 @@ public class CadastroGrupoService {
 	@Autowired
 	private GrupoRespository grupoRepository;
 	
+	@Autowired
+	private CadastroPermissaoService cadastroPermissaoService;
+	
 	public List<Grupo> listar() {
 		return this.grupoRepository.findAll();
 	}
@@ -57,5 +60,21 @@ public class CadastroGrupoService {
 		} catch (DataIntegrityViolationException e) {
 			throw new GrupoEmUsoException(e);
 		}
+	}
+	
+	@Transactional
+	public void associarPermissao(Long grupoId, Long permissaoId) {
+		var grupo = this.buscarOuFalhar(grupoId);
+		var permissao = this.cadastroPermissaoService.buscarOuFalhar(permissaoId);
+		
+		grupo.getPermissoes().add(permissao);
+	}
+	
+	@Transactional
+	public void desassociarPermissao(Long grupoId, Long permissaoId) {
+		var grupo = this.buscarOuFalhar(grupoId);
+		var permissao = this.cadastroPermissaoService.buscarOuFalhar(permissaoId);
+		
+		grupo.getPermissoes().remove(permissao);
 	}
 }

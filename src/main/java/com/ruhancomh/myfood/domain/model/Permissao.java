@@ -1,10 +1,14 @@
 package com.ruhancomh.myfood.domain.model;
 
+import java.util.HashSet;
+import java.util.Set;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.ManyToMany;
 
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -24,5 +28,8 @@ public class Permissao {
 	
 	@Column(nullable = false)
 	private String descricao;
+	
+	@ManyToMany(mappedBy = "permissoes")
+	private Set<Grupo> grupos = new HashSet<>();
 	
 }
